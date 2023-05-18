@@ -610,8 +610,8 @@ public class DefaultCairoConfiguration implements CairoConfiguration {
     }
 
     @Override
-    public int getSqlExpressionPoolCapacity() {
-        return 8192;
+    public int getExpressionNodePoolCapacity() {
+        return 64;
     }
 
     @Override

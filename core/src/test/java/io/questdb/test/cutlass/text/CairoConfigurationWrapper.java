@@ -602,8 +602,8 @@ public class CairoConfigurationWrapper implements CairoConfiguration {
     }
 
     @Override
-    public int getSqlExpressionPoolCapacity() {
-        return conf.getSqlExpressionPoolCapacity();
+    public int getExpressionNodePoolCapacity() {
+        return conf.getExpressionNodePoolCapacity();
     }
 
     @Override

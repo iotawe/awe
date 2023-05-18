@@ -231,7 +231,7 @@ public class PropServerConfiguration implements ServerConfiguration {
     private final double sqlDistinctTimestampLoadFactor;
     private final int sqlDoubleToStrCastScale;
     private final int sqlExplainModelPoolCapacity;
-    private final int sqlExpressionPoolCapacity;
+    private final int sqlExpressionNodePoolCapacity;
     private final double sqlFastMapLoadFactor;
     private final int sqlFloatToStrCastScale;
     private final int sqlGroupByMapCapacity;
@@ -497,7 +497,7 @@ public class PropServerConfiguration implements ServerConfiguration {
         this.repeatMigrationFromVersion = getInt(properties, env, PropertyKey.CAIRO_REPEAT_MIGRATION_FROM_VERSION, 426);
         this.mkdirMode = getInt(properties, env, PropertyKey.CAIRO_MKDIR_MODE, 509);
         this.maxFileNameLength = getInt(properties, env, PropertyKey.CAIRO_MAX_FILE_NAME_LENGTH, 127);
-        this.walEnabledDefault = getBoolean(properties, env, PropertyKey.CAIRO_WAL_ENABLED_DEFAULT, false);
+        this.walEnabledDefault = getBoolean(properties, env, PropertyKey.CAIRO_WAL_ENABLED_DEFAULT, true);
         this.walPurgeInterval = getLong(properties, env, PropertyKey.CAIRO_WAL_PURGE_INTERVAL, 30_000);
         this.walTxnNotificationQueueCapacity = getQueueCapacity(properties, env, PropertyKey.CAIRO_WAL_TXN_NOTIFICATION_QUEUE_CAPACITY, 4096);
         this.walRecreateDistressedSequencerAttempts = getInt(properties, env, PropertyKey.CAIRO_WAL_RECREATE_DISTRESSED_SEQUENCER_ATTEMPTS, 3);
@@ -807,7 +807,7 @@ public class PropServerConfiguration implements ServerConfiguration {
             this.sqlCharacterStoreSequencePoolCapacity = getInt(properties, env, PropertyKey.CAIRO_CHARACTER_STORE_SEQUENCE_POOL_CAPACITY, 64);
             this.sqlColumnPoolCapacity = getInt(properties, env, PropertyKey.CAIRO_COLUMN_POOL_CAPACITY, 4096);
             this.sqlCompactMapLoadFactor = getDouble(properties, env, PropertyKey.CAIRO_COMPACT_MAP_LOAD_FACTOR, 0.7);
-            this.sqlExpressionPoolCapacity = getInt(properties, env, PropertyKey.CAIRO_EXPRESSION_POOL_CAPACITY, 8192);
+            this.sqlExpressionNodePoolCapacity = getInt(properties, env, PropertyKey.CAIRO_EXPRESSION_POOL_CAPACITY, 64);
             this.sqlFastMapLoadFactor = getDouble(properties, env, PropertyKey.CAIRO_FAST_MAP_LOAD_FACTOR, 0.7);
             this.sqlJoinContextPoolCapacity = getInt(properties, env, PropertyKey.CAIRO_SQL_JOIN_CONTEXT_POOL_CAPACITY, 64);
             this.sqlLexerPoolCapacity = getInt(properties, env, PropertyKey.CAIRO_LEXER_POOL_CAPACITY, 2048);
@@ -2200,8 +2200,8 @@ public class PropServerConfiguration implements ServerConfiguration {
         }
 
         @Override
-        public int getSqlExpressionPoolCapacity() {
-            return sqlExpressionPoolCapacity;
+        public int getExpressionNodePoolCapacity() {
+            return sqlExpressionNodePoolCapacity;
         }
 
         @Override

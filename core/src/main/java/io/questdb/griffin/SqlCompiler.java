@@ -104,7 +104,7 @@ public class SqlCompiler implements Closeable {
     private final IndexBuilder rebuildIndex;
     private final Path renamePath = new Path();
     private final DatabaseSnapshotAgent snapshotAgent;
-    private final ObjectPool<ExpressionNode> sqlNodePool;
+    private final ObjectPool<ExpressionNode> expressionNodePool;
     private final TableStructureAdapter tableStructureAdapter = new TableStructureAdapter();
     private final ObjList<TableWriterAPI> tableWriters = new ObjList<>();
     private final TextLoader textLoader;
@@ -129,7 +129,7 @@ public class SqlCompiler implements Closeable {
         this.ff = configuration.getFilesFacade();
         this.messageBus = engine.getMessageBus();
         this.rebuildIndex = new IndexBuilder(configuration);
-        this.sqlNodePool = new ObjectPool<>(ExpressionNode.FACTORY, configuration.getSqlExpressionPoolCapacity());
+        this.expressionNodePool = new ObjectPool<>(ExpressionNode.FACTORY, configuration.getExpressionNodePoolCapacity());
         this.queryColumnPool = new ObjectPool<>(QueryColumn.FACTORY, configuration.getSqlColumnPoolCapacity());
         this.queryModelPool = new ObjectPool<>(QueryModel.FACTORY, configuration.getSqlModelPoolCapacity());
         this.compiledQuery = new CompiledQueryImpl(engine);
@@ -145,7 +145,7 @@ public class SqlCompiler implements Closeable {
                         : new FunctionFactoryCache(engine.getConfiguration(), ServiceLoader.load(
                         FunctionFactory.class, FunctionFactory.class.getClassLoader()))
         );
-        this.codeGenerator = new SqlCodeGenerator(engine, configuration, functionParser, sqlNodePool);
+        this.codeGenerator = new SqlCodeGenerator(engine, configuration, functionParser, expressionNodePool);
         this.vacuumColumnVersions = new VacuumColumnVersions(engine);
 
         // we have cyclical dependency here
@@ -162,7 +162,7 @@ public class SqlCompiler implements Closeable {
         optimiser = new SqlOptimiser(
                 configuration,
                 characterStore,
-                sqlNodePool,
+                expressionNodePool,
                 queryColumnPool,
                 queryModelPool,
                 postOrderTreeTraversalAlgo,
@@ -174,7 +174,7 @@ public class SqlCompiler implements Closeable {
                 configuration,
                 optimiser,
                 characterStore,
-                sqlNodePool,
+                expressionNodePool,
                 queryColumnPool,
                 queryModelPool,
                 postOrderTreeTraversalAlgo
@@ -1535,9 +1535,9 @@ public class SqlCompiler implements Closeable {
                 }
                 model.setIndexFlags(rdrMetadata.isColumnIndexed(i), rdrMetadata.getIndexValueBlockCapacity(i));
             }
-            model.setPartitionBy(SqlUtil.nextLiteral(sqlNodePool, PartitionBy.toString(rdr.getPartitionedBy()), 0));
+            model.setPartitionBy(SqlUtil.nextLiteral(expressionNodePool, PartitionBy.toString(rdr.getPartitionedBy()), 0));
             if (rdrMetadata.getTimestampIndex() != -1) {
-                model.setTimestamp(SqlUtil.nextLiteral(sqlNodePool, rdrMetadata.getColumnName(rdrMetadata.getTimestampIndex()), 0));
+                model.setTimestamp(SqlUtil.nextLiteral(expressionNodePool, rdrMetadata.getColumnName(rdrMetadata.getTimestampIndex()), 0));
             }
             model.setWalEnabled(configuration.isWalSupported() && rdrMetadata.isWalEnabled());
         }
@@ -2669,7 +2669,7 @@ public class SqlCompiler implements Closeable {
     }
 
     protected void clear() {
-        sqlNodePool.clear();
+        expressionNodePool.clear();
         characterStore.clear();
         queryColumnPool.clear();
         queryModelPool.clear();

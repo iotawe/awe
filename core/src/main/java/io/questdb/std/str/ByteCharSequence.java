@@ -41,6 +41,7 @@ public class ByteCharSequence extends AbstractCharSequence implements ByteSequen
     }
 
     public static ByteCharSequence newInstance(DirectByteCharSequence src) {
+        new Exception().printStackTrace();
         byte[] bytes = new byte[src.length()];
         for (int i = 0, n = src.length(); i < n; i++) {
             bytes[i] = src.byteAt(i);

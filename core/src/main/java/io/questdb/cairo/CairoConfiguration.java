@@ -331,7 +331,7 @@ public interface CairoConfiguration {
 
     double getSqlDistinctTimestampLoadFactor();
 
-    int getSqlExpressionPoolCapacity();
+    int getExpressionNodePoolCapacity();
 
     double getSqlFastMapLoadFactor();
 

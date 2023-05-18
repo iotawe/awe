@@ -680,6 +680,7 @@ public class CairoEngine implements Closeable, WriterSource {
         tableNameRegistry.reloadTableNameCache(convertedTables);
     }
 
+    // todo: unused?
     public int removeDirectory(@Transient Path path, CharSequence dir) {
         path.of(configuration.getRoot()).concat(dir);
         final FilesFacade ff = configuration.getFilesFacade();
