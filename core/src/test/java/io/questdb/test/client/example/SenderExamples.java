@@ -25,6 +25,7 @@
 package io.questdb.test.client.example;
 
 import io.questdb.client.Sender;
+import io.questdb.std.Os;
 
 /**
  * Example showing how to use Sender API to connect to a remote QuestDB server and ingest data.
@@ -32,25 +33,15 @@ import io.questdb.client.Sender;
 public class SenderExamples {
 
     public static void main(String[] args) {
-
         // how to use Sender API with no authentication and no encryption
-        try (Sender sender = Sender.builder().address("localhost:9009").build()) {
-            sender.table("mytable")
-                    .longColumn("id", 0)
-                    .stringColumn("name", "Joe Adams")
-                    .atNow();
-        }
-
-        // how to use Sender API with QuestDB Cloud
-        try (Sender sender = Sender.builder()
-                .address("clever-black-363-c1213c97.ilp.b04c.questdb.net:32074")
-                .enableTls()
-                .enableAuth("admin").authToken("GwBXoGG5c6NoUTLXnzMxw_uNiVa8PKobzx5EiuylMW0")
-                .build()) {
-            sender.table("mytable")
-                    .longColumn("id", 0)
-                    .stringColumn("name", "Joe Adams")
-                    .atNow();
+        for (int i = 0; i < 1000000000; i++) {
+            try (Sender sender = Sender.builder().address("localhost:9009").build()) {
+                sender.table("mytable")
+                        .longColumn("id", i)
+                        .stringColumn("name", "Joe Adams " + i)
+                        .atNow();
+            }
+            Os.sleep(5);
         }
     }
 }
