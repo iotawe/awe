@@ -65,11 +65,13 @@ public class CairoEngine implements Closeable, WriterSource {
     private final AtomicLong asyncCommandCorrelationId = new AtomicLong();
     private final CairoConfiguration configuration;
     private final CopyContext copyContext;
+    private final DatabaseSnapshotAgent databaseSnapshotAgent;
     private final EngineMaintenanceJob engineMaintenanceJob;
     private final MessageBusImpl messageBus;
     private final MetadataPool metadataPool;
     private final Metrics metrics;
     private final ReaderPool readerPool;
+    private final SqlCompilerPool sqlCompilerPool;
     private final IDGenerator tableIdGenerator;
     private final TableNameRegistry tableNameRegistry;
     private final TableSequencerAPI tableSequencerAPI;
@@ -94,6 +96,8 @@ public class CairoEngine implements Closeable, WriterSource {
         this.messageBus = new MessageBusImpl(configuration);
         this.writerPool = new WriterPool(configuration, messageBus, metrics);
         this.readerPool = new ReaderPool(configuration, messageBus);
+        this.databaseSnapshotAgent = new DatabaseSnapshotAgent(this);
+        this.sqlCompilerPool = new SqlCompilerPool(this, databaseSnapshotAgent);
         this.metadataPool = new MetadataPool(configuration, this);
         this.walWriterPool = new WalWriterPool(configuration, this);
         this.engineMaintenanceJob = new EngineMaintenanceJob(configuration);
@@ -166,12 +170,14 @@ public class CairoEngine implements Closeable, WriterSource {
         Misc.free(readerPool);
         Misc.free(metadataPool);
         Misc.free(walWriterPool);
+        Misc.free(sqlCompilerPool);
         Misc.free(tableIdGenerator);
         Misc.free(messageBus);
         Misc.free(tableSequencerAPI);
         Misc.free(telemetry);
         Misc.free(telemetryWal);
         Misc.free(tableNameRegistry);
+        Misc.free(databaseSnapshotAgent);
     }
 
     @TestOnly
@@ -355,6 +361,10 @@ public class CairoEngine implements Closeable, WriterSource {
 
     public CopyContext getCopyContext() {
         return copyContext;
+    }
+
+    public DatabaseSnapshotAgent getDatabaseSnapshotAgent() {
+        return databaseSnapshotAgent;
     }
 
     public Job getEngineMaintenanceJob() {

@@ -171,7 +171,7 @@ public class QuestDBTestNode {
             configuration = new CairoTestConfiguration(root, telemetryConfiguration, overrides);
             metrics = Metrics.enabled();
             engine = new CairoEngine(configuration, metrics);
-            snapshotAgent = new DatabaseSnapshotAgent(engine);
+            snapshotAgent = engine.getDatabaseSnapshotAgent();
             messageBus = engine.getMessageBus();
         }
 

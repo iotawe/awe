@@ -48,6 +48,7 @@ public interface PoolListener {
     short EV_UNLOCKED = 8;
     byte SRC_METADATA = 3;
     byte SRC_READER = 2;
+    byte SRC_SQL_COMPILER = 6;
     byte SRC_TABLE_REGISTRY = 5;
     byte SRC_WAL_WRITER = 4;
     byte SRC_WRITER = 1;

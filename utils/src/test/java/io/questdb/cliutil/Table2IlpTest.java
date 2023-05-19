@@ -120,7 +120,7 @@ public class Table2IlpTest {
         CircuitBreakerRegistry registry = new CircuitBreakerRegistry(conf, engine.getConfiguration());
 
         workerPool = new WorkerPool(conf);
-        snapshotAgent = new DatabaseSnapshotAgent(engine);
+        snapshotAgent = engine.getDatabaseSnapshotAgent();
         pgServer = new PGWireServer(
                 conf,
                 engine,

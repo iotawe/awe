@@ -92,7 +92,7 @@ public class ServerMain implements Closeable {
         config.init(engine, ffCache);
 
         // snapshots
-        final DatabaseSnapshotAgent snapshotAgent = freeOnExit(new DatabaseSnapshotAgent(engine));
+        final DatabaseSnapshotAgent snapshotAgent = engine.getDatabaseSnapshotAgent();
 
         // create the worker pool manager, and configure the shared pool
         final boolean walSupported = config.getCairoConfiguration().isWalSupported();

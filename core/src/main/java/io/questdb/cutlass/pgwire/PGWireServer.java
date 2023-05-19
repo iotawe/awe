@@ -60,7 +60,6 @@ public class PGWireServer implements Closeable {
             CairoEngine engine,
             WorkerPool workerPool,
             FunctionFactoryCache functionFactoryCache,
-            DatabaseSnapshotAgent snapshotAgent,
             PGConnectionContextFactory contextFactory,
             CircuitBreakerRegistry registry
     ) {

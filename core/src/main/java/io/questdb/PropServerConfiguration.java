@@ -707,7 +707,7 @@ public class PropServerConfiguration implements ServerConfiguration {
             this.netTestConnectionBufferSize = getInt(properties, env, PropertyKey.CIRCUIT_BREAKER_BUFFER_SIZE, 64);
             this.netTestConnectionBufferSize = getInt(properties, env, PropertyKey.NET_TEST_CONNECTION_BUFFER_SIZE, netTestConnectionBufferSize);
 
-            this.pgEnabled = getBoolean(properties, env, PropertyKey.PG_ENABLED, true);
+            this.pgEnabled = getBoolean(properties, env, PropertyKey.PG_ENABLED, false);
             if (pgEnabled) {
                 // deprecated
                 pgNetConnectionLimit = getInt(properties, env, PropertyKey.PG_NET_ACTIVE_CONNECTION_LIMIT, 64);
