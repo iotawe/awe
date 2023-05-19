@@ -25,7 +25,7 @@
 package io.questdb.test.griffin;
 
 import io.questdb.griffin.ExpressionParser;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.test.AbstractCairoTest;
 import io.questdb.std.Chars;
@@ -35,7 +35,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ExpressionParserTest extends AbstractCairoTest {
-    private final static SqlCompiler compiler = new SqlCompiler(engine);
+    private final static SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
     private final static RpnBuilder rpnBuilder = new RpnBuilder();
 
     @Test

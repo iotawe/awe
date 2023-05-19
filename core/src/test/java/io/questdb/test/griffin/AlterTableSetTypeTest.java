@@ -26,7 +26,7 @@ package io.questdb.test.griffin;
 
 import io.questdb.cairo.TableToken;
 import io.questdb.cairo.wal.WalUtils;
-import io.questdb.griffin.CompiledQuery;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.griffin.SqlException;
 import io.questdb.std.Chars;
 import io.questdb.std.Files;

@@ -27,9 +27,9 @@ package io.questdb.cairo.wal;
 import io.questdb.cairo.CairoEngine;
 import io.questdb.cairo.TableToken;
 import io.questdb.cairo.sql.BindVariableService;
-import io.questdb.griffin.CompiledQuery;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.griffin.FunctionFactoryCache;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.engine.functions.bind.BindVariableServiceImpl;
 import io.questdb.griffin.engine.ops.AlterOperation;
@@ -43,7 +43,7 @@ import java.io.Closeable;
 class OperationCompiler implements Closeable {
     private final BindVariableService bindVariableService;
     private final Rnd rnd;
-    private final SqlCompiler sqlCompiler;
+    private final SqlCompilerImpl sqlCompiler;
     private final TableRenameSupportExecutionContext renameSupportExecutionContext;
 
     OperationCompiler(
@@ -66,7 +66,7 @@ class OperationCompiler implements Closeable {
                 -1,
                 null
         );
-        this.sqlCompiler = new SqlCompiler(engine, functionFactoryCache, null);
+        this.sqlCompiler = new SqlCompilerImpl(engine, functionFactoryCache, null);
     }
 
     @Override

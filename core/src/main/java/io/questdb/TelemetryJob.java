@@ -26,7 +26,7 @@ package io.questdb;
 
 import io.questdb.cairo.CairoEngine;
 import io.questdb.griffin.FunctionFactoryCache;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContextImpl;
 import io.questdb.log.Log;
@@ -53,7 +53,7 @@ public class TelemetryJob extends SynchronizedJob implements Closeable {
         telemetryWal = engine.getTelemetryWal();
         telemetryConfigLogger = new TelemetryConfigLogger(engine);
 
-        try (final SqlCompiler compiler = new SqlCompiler(engine, functionFactoryCache, null)) {
+        try (final SqlCompilerImpl compiler = new SqlCompilerImpl(engine, functionFactoryCache, null)) {
             final SqlExecutionContextImpl sqlExecutionContext = new SqlExecutionContextImpl(engine, 1);
             sqlExecutionContext.with(
                     engine.getConfiguration().getFactoryProvider().getSecurityContextFactory().getRootContext(),

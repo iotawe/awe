@@ -29,7 +29,6 @@ import io.questdb.TelemetryOrigin;
 import io.questdb.cairo.*;
 import io.questdb.cairo.pool.WriterSource;
 import io.questdb.cairo.security.DenyAllSecurityContext;
-import io.questdb.cairo.sql.Record;
 import io.questdb.cairo.sql.*;
 import io.questdb.cutlass.text.TextLoader;
 import io.questdb.cutlass.text.types.TypeManager;
@@ -379,7 +378,7 @@ public class PGConnectionContext extends IOContext<PGConnectionContext> implemen
             @Transient AssociativeCache<TypesAndUpdate> typesAndUpdateCache,
             @Transient WeakSelfReturningObjectPool<TypesAndUpdate> typesAndUpdatePool,
             int operation
-    ) throws PeerDisconnectedException, PeerIsSlowToReadException, PeerIsSlowToWriteException, QueryPausedException, BadProtocolException {
+    ) throws Exception {
 
         this.typesAndSelectCache = selectAndTypesCache;
         this.typesAndSelectPool = selectAndTypesPool;
@@ -1550,12 +1549,7 @@ public class PGConnectionContext extends IOContext<PGConnectionContext> implemen
      * in the buffer they need to be passed again in parse function along with
      * any additional bytes received
      */
-    private void parse(
-            long address,
-            int len,
-            @Transient SqlCompiler compiler
-    ) throws PeerDisconnectedException, PeerIsSlowToReadException, BadProtocolException, QueryPausedException, AuthenticationException, SqlException {
-
+    private void parse(long address, int len, @Transient SqlCompiler compiler) throws Exception {
         if (requireInitialMessage) {
             sendRNQ = true;
             processInitialMessage(address, len);
@@ -2403,7 +2397,7 @@ public class PGConnectionContext extends IOContext<PGConnectionContext> implemen
             long lo,
             long limit,
             @Transient SqlCompiler compiler
-    ) throws PeerDisconnectedException, PeerIsSlowToReadException, QueryPausedException, BadProtocolException {
+    ) throws Exception {
         prepareForNewQuery();
         isEmptyQuery = true; // assume SQL text contains no query until we find out otherwise
         CharacterStoreEntry e = characterStore.newEntry();
@@ -2891,13 +2885,12 @@ public class PGConnectionContext extends IOContext<PGConnectionContext> implemen
     }
 
     class PGConnectionBatchCallback implements BatchCallback {
-
         @Override
         public void postCompile(
                 SqlCompiler compiler,
                 CompiledQuery cq,
                 CharSequence text
-        ) throws PeerIsSlowToReadException, PeerDisconnectedException, QueryPausedException, SqlException {
+        ) throws Exception {
             try {
                 PGConnectionContext.this.queryText = text;
                 LOG.info().$("parse [fd=").$(fd).$(", q=").utf8(text).I$();

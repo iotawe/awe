@@ -24,6 +24,7 @@
 
 package io.questdb.cairo;
 
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.cairo.sql.Record;
 import io.questdb.cairo.sql.RecordCursor;
 import io.questdb.cairo.sql.RecordCursorFactory;
@@ -65,7 +66,7 @@ public class ColumnPurgeJob extends SynchronizedJob implements Closeable {
     private final TableToken tableToken;
     private ColumnPurgeOperator columnPurgeOperator;
     private int inErrorCount;
-    private SqlCompiler sqlCompiler;
+    private SqlCompilerImpl sqlCompiler;
     private SqlExecutionContextImpl sqlExecutionContext;
     private WeakMutableObjectPool<ColumnPurgeRetryTask> taskPool;
     private TableWriter writer;
@@ -81,7 +82,7 @@ public class ColumnPurgeJob extends SynchronizedJob implements Closeable {
         this.retryDelayLimit = configuration.getColumnPurgeRetryDelayLimit();
         this.retryDelay = configuration.getColumnPurgeRetryDelay();
         this.retryDelayMultiplier = configuration.getColumnPurgeRetryDelayMultiplier();
-        this.sqlCompiler = new SqlCompiler(engine, functionFactoryCache, null);
+        this.sqlCompiler = new SqlCompilerImpl(engine, functionFactoryCache, null);
         this.sqlExecutionContext = new SqlExecutionContextImpl(engine, 1);
         this.sqlExecutionContext.with(
                 configuration.getFactoryProvider().getSecurityContextFactory().getRootContext(),

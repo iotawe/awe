@@ -26,7 +26,7 @@ package io.questdb.cutlass.pgwire;
 
 import io.questdb.cairo.CairoEngine;
 import io.questdb.cairo.sql.BindVariableService;
-import io.questdb.griffin.CompiledQuery;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.griffin.CompiledQueryImpl;
 import io.questdb.griffin.engine.ops.UpdateOperation;
 import io.questdb.std.Misc;
@@ -51,7 +51,7 @@ public class TypesAndUpdate extends AbstractTypeContainer<TypesAndUpdate> {
     }
 
     public void of(CompiledQuery updateQuery, BindVariableService bindVariableService) {
-        // Compiled query from SqlCompiler cannot be used
+        // Compiled query from SqlCompilerImpl cannot be used
         // to store compiled statements because the instance re-used for every new compilation
         UpdateOperation updateOperation = updateQuery.getUpdateOperation();
         String sqlStatement = updateQuery.getSqlStatement();

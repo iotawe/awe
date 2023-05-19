@@ -25,7 +25,8 @@
 package io.questdb;
 
 import io.questdb.cairo.*;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.QueryBuilder;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.log.Log;
@@ -92,7 +93,7 @@ public final class Telemetry<T extends AbstractTelemetryTask> implements Closeab
         }
     }
 
-    public void init(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    public void init(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         if (!enabled) {
             return;
         }
@@ -215,7 +216,7 @@ public final class Telemetry<T extends AbstractTelemetryTask> implements Closeab
     }
 
     public interface TelemetryType<T extends AbstractTelemetryTask> {
-        SqlCompiler.QueryBuilder getCreateSql(SqlCompiler.QueryBuilder builder);
+        QueryBuilder getCreateSql(QueryBuilder builder);
 
         String getTableName();
 

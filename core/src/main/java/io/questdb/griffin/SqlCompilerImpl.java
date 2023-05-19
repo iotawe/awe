@@ -29,7 +29,6 @@ import io.questdb.PropServerConfiguration;
 import io.questdb.TelemetryOrigin;
 import io.questdb.TelemetrySystemEvent;
 import io.questdb.cairo.*;
-import io.questdb.cairo.sql.Record;
 import io.questdb.cairo.sql.*;
 import io.questdb.cairo.vm.Vm;
 import io.questdb.cairo.vm.api.MemoryMARW;
@@ -45,9 +44,6 @@ import io.questdb.griffin.engine.table.TableListRecordCursorFactory;
 import io.questdb.griffin.model.*;
 import io.questdb.log.Log;
 import io.questdb.log.LogFactory;
-import io.questdb.network.PeerDisconnectedException;
-import io.questdb.network.PeerIsSlowToReadException;
-import io.questdb.network.QueryPausedException;
 import io.questdb.std.*;
 import io.questdb.std.datetime.DateFormat;
 import io.questdb.std.str.Path;
@@ -63,19 +59,19 @@ import static io.questdb.cairo.TableUtils.COLUMN_NAME_TXN_NONE;
 import static io.questdb.cairo.wal.WalUtils.WAL_FORMAT_VERSION;
 import static io.questdb.griffin.SqlKeywords.*;
 
-public class SqlCompiler implements Closeable {
+public class SqlCompilerImpl implements SqlCompiler, Closeable {
     static final ObjList<String> sqlControlSymbols = new ObjList<>(8);
     //null object used to skip null checks in batch method
     private static final BatchCallback EMPTY_CALLBACK = new BatchCallback() {
         @Override
-        public void postCompile(SqlCompiler compiler, CompiledQuery cq, CharSequence queryText) {
+        public void postCompile(SqlCompiler compiler, CompiledQuery cq, CharSequence queryText)  {
         }
 
         @Override
         public void preCompile(SqlCompiler compiler) {
         }
     };
-    private final static Log LOG = LogFactory.getLog(SqlCompiler.class);
+    private final static Log LOG = LogFactory.getLog(SqlCompilerImpl.class);
     private static final IntList castGroups = new IntList();
     protected final CompiledQueryImpl compiledQuery;
     protected final CairoConfiguration configuration;
@@ -98,7 +94,7 @@ public class SqlCompiler implements Closeable {
     private final TimestampValueRecord partitionFunctionRec = new TimestampValueRecord();
     private final Path path = new Path();
     private final ExecutableMethod insertAsSelectMethod = this::insertAsSelect;
-    private final QueryBuilder queryBuilder = new QueryBuilder();
+    private final QueryBuilder queryBuilder = new QueryBuilder(this);
     private final ObjectPool<QueryColumn> queryColumnPool;
     private final ObjectPool<QueryModel> queryModelPool;
     private final IndexBuilder rebuildIndex;
@@ -119,11 +115,11 @@ public class SqlCompiler implements Closeable {
     private boolean isSingleQueryMode = true;
 
     // Exposed for embedded API users.
-    public SqlCompiler(CairoEngine engine) {
+    public SqlCompilerImpl(CairoEngine engine) {
         this(engine, null, null);
     }
 
-    public SqlCompiler(CairoEngine engine, @Nullable FunctionFactoryCache functionFactoryCache, @Nullable DatabaseSnapshotAgent snapshotAgent) {
+    public SqlCompilerImpl(CairoEngine engine, @Nullable FunctionFactoryCache functionFactoryCache, @Nullable DatabaseSnapshotAgent snapshotAgent) {
         this.engine = engine;
         this.configuration = engine.getConfiguration();
         this.ff = configuration.getFilesFacade();
@@ -184,6 +180,19 @@ public class SqlCompiler implements Closeable {
         alterOperationBuilder = new AlterOperationBuilder();
     }
 
+    // public for testing
+    public static void expectKeyword(GenericLexer lexer, CharSequence keyword) throws SqlException {
+        CharSequence tok = SqlUtil.fetchNext(lexer);
+
+        if (tok == null) {
+            throw SqlException.position(lexer.getPosition()).put('\'').put(keyword).put("' expected");
+        }
+
+        if (!Chars.equalsLowerCaseAscii(tok, keyword)) {
+            throw SqlException.position(lexer.lastTokenPosition()).put('\'').put(keyword).put("' expected");
+        }
+    }
+
     @Override
     public void close() {
         backupAgent.close();
@@ -223,16 +232,13 @@ public class SqlCompiler implements Closeable {
      * @param executionContext - SQL execution context
      * @param batchCallback    - callback to perform actions prior to or after batch part compilation, e.g. clear caches or execute command
      * @throws SqlException              - in case of syntax error
-     * @throws PeerDisconnectedException - when peer is disconnected
-     * @throws PeerIsSlowToReadException - when peer is too slow
-     * @throws QueryPausedException      - when query is paused
-     * @see <a href="https://www.postgresql.org/docs/current/protocol-flow.html#id-1.10.5.7.4">PostgreSQL documentation</a>
+     * @throws Exception                 - propagated from the callback
      */
     public void compileBatch(
             @NotNull CharSequence query,
             @NotNull SqlExecutionContext executionContext,
             BatchCallback batchCallback
-    ) throws PeerIsSlowToReadException, PeerDisconnectedException, QueryPausedException, SqlException {
+    ) throws Exception {
 
         LOG.info().$("batch [text=").$(query).I$();
 
@@ -2635,19 +2641,6 @@ public class SqlCompiler implements Closeable {
         }
     }
 
-    // public for testing
-    public static void expectKeyword(GenericLexer lexer, CharSequence keyword) throws SqlException {
-        CharSequence tok = SqlUtil.fetchNext(lexer);
-
-        if (tok == null) {
-            throw SqlException.position(lexer.getPosition()).put('\'').put(keyword).put("' expected");
-        }
-
-        if (!Chars.equalsLowerCaseAscii(tok, keyword)) {
-            throw SqlException.position(lexer.lastTokenPosition()).put('\'').put(keyword).put("' expected");
-        }
-    }
-
     protected static CharSequence expectToken(GenericLexer lexer, CharSequence expected) throws SqlException {
         CharSequence tok = SqlUtil.fetchNext(lexer);
 
@@ -3190,29 +3183,6 @@ public class SqlCompiler implements Closeable {
             } finally {
                 tableTokens.clear();
             }
-        }
-    }
-
-    public class QueryBuilder implements Mutable {
-        private final StringSink sink = new StringSink();
-
-        public QueryBuilder $(CharSequence value) {
-            sink.put(value);
-            return this;
-        }
-
-        public QueryBuilder $(int value) {
-            sink.put(value);
-            return this;
-        }
-
-        @Override
-        public void clear() {
-            sink.clear();
-        }
-
-        public CompiledQuery compile(SqlExecutionContext executionContext) throws SqlException {
-            return SqlCompiler.this.compile(sink, executionContext);
         }
     }
 

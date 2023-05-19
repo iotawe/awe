@@ -26,13 +26,7 @@ package io.questdb.cutlass.pgwire;
 
 import io.questdb.Metrics;
 import io.questdb.cairo.CairoEngine;
-import io.questdb.griffin.DatabaseSnapshotAgent;
-import io.questdb.griffin.FunctionFactoryCache;
-import io.questdb.griffin.SqlCompiler;
-import io.questdb.network.PeerDisconnectedException;
-import io.questdb.network.PeerIsSlowToReadException;
-import io.questdb.network.PeerIsSlowToWriteException;
-import io.questdb.network.QueryPausedException;
+import io.questdb.cairo.sql.SqlCompiler;
 import io.questdb.std.AssociativeCache;
 import io.questdb.std.Misc;
 import io.questdb.std.WeakSelfReturningObjectPool;
@@ -47,16 +41,9 @@ public class PGJobContext implements Closeable {
     private final AssociativeCache<TypesAndUpdate> typesAndUpdateCache;
     private final WeakSelfReturningObjectPool<TypesAndUpdate> typesAndUpdatePool;
 
-    public PGJobContext(
-            PGWireConfiguration configuration,
-            CairoEngine engine,
-            FunctionFactoryCache functionFactoryCache,
-            DatabaseSnapshotAgent snapshotAgent
-    ) {
+    public PGJobContext(PGWireConfiguration configuration, CairoEngine engine) {
         this.compiler = configuration.getFactoryProvider().getSqlCompilerFactory().getInstance(engine, functionFactoryCache, snapshotAgent);
-
         final Metrics metrics = engine.getMetrics();
-
         final boolean enableSelectCache = configuration.isSelectCacheEnabled();
         final int blockCount = enableSelectCache ? configuration.getSelectCacheBlockCount() : 1;
         final int rowCount = enableSelectCache ? configuration.getSelectCacheRowCount() : 1;
@@ -85,7 +72,7 @@ public class PGJobContext implements Closeable {
     public void handleClientOperation(
             PGConnectionContext context,
             int operation
-    ) throws PeerIsSlowToWriteException, PeerIsSlowToReadException, PeerDisconnectedException, QueryPausedException, BadProtocolException {
+    ) throws Exception {
         context.handleClientOperation(
                 compiler,
                 typesAndSelectCache,

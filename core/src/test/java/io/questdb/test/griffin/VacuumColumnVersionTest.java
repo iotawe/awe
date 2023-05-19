@@ -29,7 +29,7 @@ import io.questdb.cairo.ColumnPurgeJob;
 import io.questdb.cairo.TableReader;
 import io.questdb.cairo.TableToken;
 import io.questdb.cairo.sql.OperationFuture;
-import io.questdb.griffin.CompiledQuery;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.griffin.SqlException;
 import io.questdb.std.*;
 import io.questdb.std.str.Path;

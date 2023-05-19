@@ -24,19 +24,14 @@
 
 package io.questdb.griffin;
 
-import io.questdb.network.PeerDisconnectedException;
-import io.questdb.network.PeerIsSlowToReadException;
-import io.questdb.network.QueryPausedException;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.cairo.sql.SqlCompiler;
 
 /**
  * Interface used to add steps before and/or after query compilation, e.g. cache checks and query result sending to jdbc client .
  */
 public interface BatchCallback {
-    void postCompile(
-            SqlCompiler compiler,
-            CompiledQuery cq,
-            CharSequence queryText
-    ) throws PeerIsSlowToReadException, PeerDisconnectedException, QueryPausedException, SqlException;
+    void postCompile(SqlCompiler compiler, CompiledQuery cq, CharSequence queryText) throws Exception;
 
     void preCompile(SqlCompiler compiler);
 }

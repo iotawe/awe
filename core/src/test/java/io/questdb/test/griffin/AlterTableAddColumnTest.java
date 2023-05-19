@@ -25,8 +25,8 @@
 package io.questdb.test.griffin;
 
 import io.questdb.cairo.*;
-import io.questdb.griffin.CompiledQuery;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.test.AbstractGriffinTest;
 import io.questdb.test.cairo.DefaultTestCairoConfiguration;
@@ -39,7 +39,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.questdb.griffin.CompiledQuery.ALTER;
+import static io.questdb.cairo.sql.CompiledQuery.ALTER;
 
 public class AlterTableAddColumnTest extends AbstractGriffinTest {
 
@@ -370,7 +370,7 @@ public class AlterTableAddColumnTest extends AbstractGriffinTest {
                     };
 
                     try (CairoEngine engine = new CairoEngine(configuration, metrics)) {
-                        try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                        try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                             CompiledQuery compile = compiler.compile("alter table x add column meh symbol cache", sqlExecutionContext);
                             Assert.assertEquals(ALTER, compile.getType());
                             compile.execute(null).await();
@@ -550,7 +550,7 @@ public class AlterTableAddColumnTest extends AbstractGriffinTest {
                     };
 
                     try (CairoEngine engine = new CairoEngine(configuration, metrics)) {
-                        try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                        try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                             CompiledQuery cc = compiler.compile("alter table x add column meh symbol", sqlExecutionContext);
                             Assert.assertEquals(ALTER, cc.getType());
                             cc.execute(null).await();
@@ -590,7 +590,7 @@ public class AlterTableAddColumnTest extends AbstractGriffinTest {
                     };
 
                     try (CairoEngine engine = new CairoEngine(configuration, metrics)) {
-                        try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                        try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                             CompiledQuery cc = compiler.compile("alter table x add column meh symbol", sqlExecutionContext);
                             Assert.assertEquals(ALTER, cc.getType());
                             cc.execute(null).await();

@@ -27,8 +27,8 @@ package io.questdb.test.cutlass.line.tcp;
 import io.questdb.cairo.*;
 import io.questdb.cairo.pool.PoolListener;
 import io.questdb.cairo.sql.OperationFuture;
-import io.questdb.griffin.CompiledQuery;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.griffin.engine.ops.AlterOperation;
@@ -140,7 +140,7 @@ public class AlterWalTableLineTcpReceiverTest extends AbstractLineTcpReceiverTes
                 }
                 LOG.info().$("ABOUT TO DROP PARTITIONS").$();
                 try (
-                        SqlCompiler compiler = new SqlCompiler(engine);
+                        SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                         SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine)
                 ) {
                     CompiledQuery cc = compiler.compile("ALTER TABLE plug DROP PARTITION WHERE timestamp > 0", sqlExecutionContext);
@@ -389,7 +389,7 @@ public class AlterWalTableLineTcpReceiverTest extends AbstractLineTcpReceiverTes
             final SOCountDownLatch ilpProducerHalted = new SOCountDownLatch(1);
             final AtomicReference<SqlException> partitionDropperProblem = new AtomicReference<>();
             try (
-                    SqlCompiler compiler = new SqlCompiler(engine);
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                     SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine)
             ) {
 
@@ -717,7 +717,7 @@ public class AlterWalTableLineTcpReceiverTest extends AbstractLineTcpReceiverTes
         // Subscribe local writer even queue to the global engine writer response queue
         LOG.info().$("Started waiting for writer ASYNC event").$();
         try (
-                SqlCompiler compiler = new SqlCompiler(engine);
+                SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                 SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine)
         ) {
             CompiledQuery cc = compiler.compile(sql, sqlExecutionContext);

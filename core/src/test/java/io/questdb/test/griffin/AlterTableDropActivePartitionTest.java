@@ -43,7 +43,7 @@ import io.questdb.test.tools.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static io.questdb.griffin.CompiledQuery.ALTER;
+import static io.questdb.cairo.sql.CompiledQuery.ALTER;
 
 public class AlterTableDropActivePartitionTest extends AbstractGriffinTest {
 

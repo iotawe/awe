@@ -30,7 +30,7 @@ import io.questdb.cairo.TableToken;
 import io.questdb.cairo.TableWriter;
 import io.questdb.cairo.security.AllowAllSecurityContext;
 import io.questdb.cairo.wal.WalUtils;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.griffin.SqlExecutionContextImpl;
@@ -66,7 +66,7 @@ abstract class AbstractAlterTableSetTypeRestartTest extends AbstractBootstrapTes
     static void assertNumOfRows(CairoEngine engine, String tableName, int count) throws SqlException {
         try (
                 final SqlExecutionContext context = createSqlExecutionContext(engine);
-                final SqlCompiler compiler = new SqlCompiler(engine)
+                final SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
         ) {
             TestUtils.assertSql(
                     compiler,

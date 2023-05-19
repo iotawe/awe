@@ -45,7 +45,7 @@ import java.util.Collections;
 
 public class FunctionParserEqFunctionsNullTest extends BaseFunctionFactoryTest {
 
-    // SqlCompiler.isAssignableFrom
+    // SqlCompilerImpl.isAssignableFrom
     private static final int[] EQUIVALENT_NULL_TYPES = {
             ColumnType.NULL,
             ColumnType.CHAR,

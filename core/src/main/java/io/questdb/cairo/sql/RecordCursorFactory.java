@@ -46,7 +46,7 @@ import java.io.Closeable;
  * Example:
  * <p>
  * final SqlExecutionContextImpl ctx = new SqlExecutionContextImpl(engine, 1);
- * try (SqlCompiler compiler = new SqlCompiler(engine)) {
+ * try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
  * try (RecordCursorFactory factory = compiler.compile("abc", ctx).getRecordCursorFactory()) {
  * try (RecordCursor cursor = factory.getCursor(ctx)) {
  * final Record record = cursor.getRecord();

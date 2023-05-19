@@ -26,8 +26,6 @@ package io.questdb.cutlass.pgwire;
 
 import io.questdb.Metrics;
 import io.questdb.cairo.CairoEngine;
-import io.questdb.griffin.DatabaseSnapshotAgent;
-import io.questdb.griffin.FunctionFactoryCache;
 import io.questdb.griffin.SqlExecutionContextImpl;
 import io.questdb.log.Log;
 import io.questdb.log.LogFactory;
@@ -59,7 +57,6 @@ public class PGWireServer implements Closeable {
             PGWireConfiguration configuration,
             CairoEngine engine,
             WorkerPool workerPool,
-            FunctionFactoryCache functionFactoryCache,
             PGConnectionContextFactory contextFactory,
             CircuitBreakerRegistry registry
     ) {

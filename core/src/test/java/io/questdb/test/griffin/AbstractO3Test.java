@@ -93,7 +93,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void assertIndexConsistency(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String table,
             CairoEngine engine
@@ -103,7 +103,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void assertIndexConsistency(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             CairoEngine engine
     ) throws SqlException {
@@ -116,7 +116,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void assertIndexConsistencySink(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         TestUtils.assertEquals(
@@ -128,7 +128,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void assertIndexResultAgainstFile(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String resourceName
     ) throws SqlException, URISyntaxException {
@@ -137,7 +137,7 @@ public class AbstractO3Test extends AbstractTest {
 
     static void assertMaxTimestamp(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext,
             String expectedSql
     ) throws SqlException {
@@ -170,7 +170,7 @@ public class AbstractO3Test extends AbstractTest {
 
     protected static void assertO3DataConsistency(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             final String referenceTableDDL,
             final String o3InsertSQL,
@@ -193,7 +193,7 @@ public class AbstractO3Test extends AbstractTest {
 
     static void assertO3DataConsistency(
             final CairoEngine engine,
-            final SqlCompiler compiler,
+            final SqlCompilerImpl compiler,
             final SqlExecutionContext sqlExecutionContext,
             final String referenceTableDDL,
             final String o3InsertSQL
@@ -231,7 +231,7 @@ public class AbstractO3Test extends AbstractTest {
 
     protected static void assertO3DataCursors(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             @Nullable String referenceTableDDL,
             String referenceSQL,
@@ -258,7 +258,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void assertSqlResultAgainstFile(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String sql,
             String resourceName
@@ -269,17 +269,17 @@ public class AbstractO3Test extends AbstractTest {
         TestUtils.assertEquals(new File(url.toURI()), sink);
     }
 
-    static void assertXCount(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    static void assertXCount(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         printSqlResult(compiler, sqlExecutionContext, "select count() from x");
         TestUtils.assertEquals(sink2, sink);
     }
 
-    protected static void assertXCountY(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    protected static void assertXCountY(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         TestUtils.assertEquals(compiler, sqlExecutionContext, "select count() from x", "select count() from y");
         assertMaxTimestamp(compiler.getEngine(), compiler, sqlExecutionContext, "select max(ts) from y");
     }
 
-    protected static void assertXY(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    protected static void assertXY(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         TestUtils.assertEquals(
                 compiler,
                 sqlExecutionContext,
@@ -434,7 +434,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected static void printSqlResult(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String sql
     ) throws SqlException {
@@ -442,7 +442,7 @@ public class AbstractO3Test extends AbstractTest {
     }
 
     protected void insertUncommitted(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String sql,
             TableWriter writer

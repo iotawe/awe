@@ -26,6 +26,7 @@ package io.questdb.test.griffin;
 
 import io.questdb.cairo.CairoConfiguration;
 import io.questdb.cairo.CairoEngine;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.cairo.sql.RecordCursor;
 import io.questdb.cairo.sql.RecordCursorFactory;
 import io.questdb.griffin.*;
@@ -115,7 +116,7 @@ public class LatestByParallelTest extends AbstractTest {
     }
 
     private static void assertQuery(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String expected,
             String ddl,
@@ -137,7 +138,7 @@ public class LatestByParallelTest extends AbstractTest {
 
     private static void testLatestByAll(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -165,7 +166,7 @@ public class LatestByParallelTest extends AbstractTest {
 
     private static void testLatestByFiltered(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -194,7 +195,7 @@ public class LatestByParallelTest extends AbstractTest {
 
     private static void testLatestByTimestamp(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -225,7 +226,7 @@ public class LatestByParallelTest extends AbstractTest {
         final int workerCount = pool == null ? 1 : pool.getWorkerCount();
         try (
                 final CairoEngine engine = new CairoEngine(configuration);
-                final SqlCompiler compiler = new SqlCompiler(engine)
+                final SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
         ) {
             try (final SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine, workerCount)
             ) {
@@ -293,7 +294,7 @@ public class LatestByParallelTest extends AbstractTest {
 
     @FunctionalInterface
     interface LatestByRunnable {
-        void run(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws Exception;
+        void run(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws Exception;
     }
 
 }

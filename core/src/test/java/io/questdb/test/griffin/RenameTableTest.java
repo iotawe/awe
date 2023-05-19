@@ -30,7 +30,7 @@ import io.questdb.test.tools.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static io.questdb.griffin.CompiledQuery.RENAME_TABLE;
+import static io.questdb.cairo.sql.CompiledQuery.RENAME_TABLE;
 
 public class RenameTableTest extends AbstractGriffinTest {
 

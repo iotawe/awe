@@ -28,10 +28,7 @@ import io.questdb.cairo.CairoEngine;
 import io.questdb.cairo.CairoException;
 import io.questdb.cairo.TableToken;
 import io.questdb.cairo.TableWriter;
-import io.questdb.cairo.sql.OperationFuture;
-import io.questdb.cairo.sql.Record;
-import io.questdb.cairo.sql.RecordCursor;
-import io.questdb.cairo.sql.RecordCursorFactory;
+import io.questdb.cairo.sql.*;
 import io.questdb.griffin.*;
 import io.questdb.log.Log;
 import io.questdb.log.LogFactory;
@@ -63,7 +60,7 @@ public class TelemetryConfigLogger implements Closeable {
         configWriter = Misc.free(configWriter);
     }
 
-    private void appendConfigRow(SqlCompiler compiler, TableWriter configWriter, Long256 id, boolean enabled) {
+    private void appendConfigRow(SqlCompilerImpl compiler, TableWriter configWriter, Long256 id, boolean enabled) {
         final TableWriter.Row row = configWriter.newRow();
         if (id == null) {
             final MicrosecondClock clock = compiler.getEngine().getConfiguration().getMicrosecondClock();
@@ -89,7 +86,7 @@ public class TelemetryConfigLogger implements Closeable {
         configWriter.commit();
     }
 
-    private void tryAddColumn(SqlCompiler compiler, SqlExecutionContext executionContext, CharSequence columnDetails) {
+    private void tryAddColumn(SqlCompilerImpl compiler, SqlExecutionContext executionContext, CharSequence columnDetails) {
         try {
             CompiledQuery cc = compiler.query().$("ALTER TABLE ").$(TELEMETRY_CONFIG_TABLE_NAME).$(" ADD COLUMN ").$(columnDetails).compile(executionContext);
             try (OperationFuture fut = cc.execute(tempSequence)) {
@@ -101,7 +98,7 @@ public class TelemetryConfigLogger implements Closeable {
     }
 
     private TableWriter updateTelemetryConfig(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContextImpl sqlExecutionContext,
             TableToken tableToken
     ) throws SqlException {
@@ -143,7 +140,7 @@ public class TelemetryConfigLogger implements Closeable {
         return configWriter;
     }
 
-    void init(SqlCompiler compiler, SqlExecutionContextImpl sqlExecutionContext) throws SqlException {
+    void init(SqlCompilerImpl compiler, SqlExecutionContextImpl sqlExecutionContext) throws SqlException {
         final TableToken configTableToken = compiler.query()
                 .$("CREATE TABLE IF NOT EXISTS ")
                 .$(TELEMETRY_CONFIG_TABLE_NAME)

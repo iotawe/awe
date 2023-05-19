@@ -30,8 +30,8 @@ import io.questdb.cairo.sql.OperationFuture;
 import io.questdb.cutlass.http.ex.NotEnoughLinesException;
 import io.questdb.cutlass.json.JsonLexer;
 import io.questdb.cutlass.text.*;
-import io.questdb.griffin.CompiledQuery;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.std.*;
@@ -3059,7 +3059,7 @@ public class TextLoaderTest extends AbstractGriffinTest {
         );
     }
 
-    private static void compile(SqlCompiler compiler, CharSequence query, SqlExecutionContext executionContext) throws SqlException {
+    private static void compile(SqlCompilerImpl compiler, CharSequence query, SqlExecutionContext executionContext) throws SqlException {
         CompiledQuery cc = compiler.compile(query, executionContext);
         try (OperationFuture future = cc.execute(null)) {
             future.await();
@@ -3202,7 +3202,7 @@ public class TextLoaderTest extends AbstractGriffinTest {
         };
         try (CairoEngine engine = new CairoEngine(configuration)) {
 
-            try (SqlCompiler compiler = new SqlCompiler(engine)) {
+            try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                 compiler.compile("create table test(StrSym symbol, ts timestamp) " + nominatedTimestamp, sqlExecutionContext);
                 engine.releaseAllWriters();
             }

@@ -28,11 +28,11 @@ import io.questdb.cairo.*;
 import io.questdb.cairo.sql.RecordCursor;
 import io.questdb.cairo.sql.RecordCursorFactory;
 import io.questdb.cairo.sql.SingleSymbolFilter;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.engine.groupby.MicroTimestampSampler;
 import io.questdb.griffin.engine.groupby.SampleByFirstLastRecordCursorFactory;
 import io.questdb.test.cutlass.text.SqlExecutionContextStub;
 import io.questdb.test.AbstractGriffinTest;
-import io.questdb.griffin.SqlCompiler;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContextImpl;
 import io.questdb.griffin.model.ExpressionNode;
@@ -528,7 +528,7 @@ public class SampleByTest extends AbstractGriffinTest {
             };
 
             try (CairoEngine engine = new CairoEngine(configuration)) {
-                try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                     try {
                         try (RecordCursorFactory factory = compiler.compile("select c, sum_t(d) from x", sqlExecutionContext).getRecordCursorFactory()) {
                             RecordCursor cursor = factory.getCursor(new SqlExecutionContextStub(engine));
@@ -4306,7 +4306,7 @@ public class SampleByTest extends AbstractGriffinTest {
             };
 
             try (CairoEngine engine = new CairoEngine(configuration)) {
-                try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                     try (SqlExecutionContextImpl ctx = new SqlExecutionContextImpl(engine, sqlExecutionContext.getWorkerCount(), sqlExecutionContext.getSharedWorkerCount())) {
                         compiler.compile("select b, sum(a), k from x sample by 3h fill(linear)", ctx);
                         Assert.fail();
@@ -4355,7 +4355,7 @@ public class SampleByTest extends AbstractGriffinTest {
             };
 
             try (CairoEngine engine = new CairoEngine(configuration)) {
-                try (SqlCompiler compiler = new SqlCompiler(engine)) {
+                try (SqlCompilerImpl compiler = new SqlCompilerImpl(engine)) {
                     try {
                         try (
                                 RecordCursorFactory factory = compiler.compile("select b, sum(a), k from x sample by 3h fill(linear)", sqlExecutionContext).getRecordCursorFactory();

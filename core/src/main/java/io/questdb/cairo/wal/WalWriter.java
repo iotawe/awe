@@ -213,7 +213,7 @@ public class WalWriter implements TableWriterAPI {
         }
 
         // it is guaranteed that there is no join in UPDATE statement
-        // because SqlCompiler rejects the UPDATE if it contains join
+        // because SqlCompilerImpl rejects the UPDATE if it contains join
         return applyNonStructural(operation, true);
 
         // when join is allowed in UPDATE we have 2 options

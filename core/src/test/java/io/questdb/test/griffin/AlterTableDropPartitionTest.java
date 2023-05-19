@@ -40,7 +40,7 @@ import org.junit.Test;
 import java.io.File;
 import java.nio.file.Paths;
 
-import static io.questdb.griffin.CompiledQuery.ALTER;
+import static io.questdb.cairo.sql.CompiledQuery.ALTER;
 
 public class AlterTableDropPartitionTest extends AbstractGriffinTest {
 

@@ -214,7 +214,7 @@ public class HttpQueryTestBuilder {
                         return new JsonQueryProcessor(
                                 httpConfiguration.getJsonQueryProcessorConfiguration(),
                                 engine,
-                                new SqlCompiler(engine),
+                                new SqlCompilerImpl(engine),
                                 sqlExecutionContext
                         );
                     }

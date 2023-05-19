@@ -28,7 +28,7 @@ import io.questdb.Telemetry;
 import io.questdb.TelemetryOrigin;
 import io.questdb.cairo.CairoException;
 import io.questdb.cairo.TableWriter;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.QueryBuilder;
 import io.questdb.log.Log;
 import io.questdb.log.LogFactory;
 import io.questdb.std.ObjectFactory;
@@ -37,11 +37,11 @@ public class TelemetryTask implements AbstractTelemetryTask {
     public static final String TABLE_NAME = "telemetry";
 
     private static final Log LOG = LogFactory.getLog(TelemetryTask.class);
-    public static final Telemetry.TelemetryTypeBuilder<TelemetryTask> TELEMETRY = configuration -> new Telemetry.TelemetryType<TelemetryTask>() {
+    public static final Telemetry.TelemetryTypeBuilder<TelemetryTask> TELEMETRY = configuration -> new Telemetry.TelemetryType<>() {
         private final TelemetryTask systemStatusTask = new TelemetryTask();
 
         @Override
-        public SqlCompiler.QueryBuilder getCreateSql(SqlCompiler.QueryBuilder builder) {
+        public QueryBuilder getCreateSql(QueryBuilder builder) {
             return builder
                     .$("CREATE TABLE IF NOT EXISTS \"")
                     .$(TABLE_NAME)

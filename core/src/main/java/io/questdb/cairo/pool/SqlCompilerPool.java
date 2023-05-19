@@ -26,10 +26,11 @@ package io.questdb.cairo.pool;
 
 import io.questdb.cairo.CairoEngine;
 import io.questdb.cairo.TableToken;
-import io.questdb.griffin.DatabaseSnapshotAgent;
-import io.questdb.griffin.FunctionFactory;
-import io.questdb.griffin.FunctionFactoryCache;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.cairo.sql.QueryBuilder;
+import io.questdb.cairo.sql.SqlCompiler;
+import io.questdb.griffin.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ServiceLoader;
 
@@ -56,7 +57,7 @@ public class SqlCompilerPool extends AbstractMultiTenantPool<SqlCompilerPool.R> 
         return new R(entry, index);
     }
 
-    public class R extends SqlCompiler implements PoolTenant {
+    public class R implements PoolTenant, SqlCompiler {
         private final int index;
         private Entry<R> entry;
         private boolean open;
@@ -111,6 +112,16 @@ public class SqlCompilerPool extends AbstractMultiTenantPool<SqlCompilerPool.R> 
         @Override
         public void updateTableToken(TableToken tableToken) {
             // noop
+        }
+
+        @Override
+        public CompiledQuery compile(@NotNull CharSequence query, @NotNull SqlExecutionContext executionContext) throws SqlException {
+            return null;
+        }
+
+        @Override
+        public QueryBuilder query() {
+            return null;
         }
     }
 }

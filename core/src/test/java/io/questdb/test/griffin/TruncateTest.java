@@ -39,7 +39,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
-import static io.questdb.griffin.CompiledQuery.TRUNCATE;
+import static io.questdb.cairo.sql.CompiledQuery.TRUNCATE;
 
 public class TruncateTest extends AbstractGriffinTest {
 

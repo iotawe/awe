@@ -416,7 +416,7 @@ public final class TestUtils {
     }
 
     public static void assertEquals(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String expectedSql,
             String actualSql
@@ -581,7 +581,7 @@ public final class TestUtils {
     }
 
     public static void assertSql(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             CharSequence sql,
             MutableCharSink sink,
@@ -596,11 +596,11 @@ public final class TestUtils {
         assertEquals(expected, sink);
     }
 
-    public static void assertSqlCursors(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext, String expected, String actual, Log log) throws SqlException {
+    public static void assertSqlCursors(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext, String expected, String actual, Log log) throws SqlException {
         assertSqlCursors(compiler, sqlExecutionContext, expected, actual, log, false);
     }
 
-    public static void assertSqlCursors(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext, String expected, String actual, Log log, boolean symbolsAsStrings) throws SqlException {
+    public static void assertSqlCursors(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext, String expected, String actual, Log log, boolean symbolsAsStrings) throws SqlException {
         try (RecordCursorFactory factory = compiler.compile(expected, sqlExecutionContext).getRecordCursorFactory()) {
             try (RecordCursorFactory factory2 = compiler.compile(actual, sqlExecutionContext).getRecordCursorFactory()) {
                 try (RecordCursor cursor1 = factory.getCursor(sqlExecutionContext)) {
@@ -670,7 +670,7 @@ public final class TestUtils {
     }
 
     public static void assertSqlWithTypes(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             CharSequence sql,
             MutableCharSink sink,
@@ -745,7 +745,7 @@ public final class TestUtils {
     }
 
     public static void createPopulateTable(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             TableModel tableModel,
             int totalRows,
@@ -765,7 +765,7 @@ public final class TestUtils {
 
     public static void createPopulateTable(
             CharSequence tableName,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             TableModel tableModel,
             int totalRows,
@@ -926,7 +926,7 @@ public final class TestUtils {
         final int workerCount = pool != null ? pool.getWorkerCount() : 1;
         try (
                 final CairoEngine engine = new CairoEngine(configuration, metrics);
-                final SqlCompiler compiler = new SqlCompiler(engine);
+                final SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                 final SqlExecutionContext sqlExecutionContext = createSqlExecutionCtx(engine, workerCount)
         ) {
             try {
@@ -1035,7 +1035,7 @@ public final class TestUtils {
         return engine.getWriter(tableToken, "test");
     }
 
-    public static void insert(SqlCompiler compiler, SqlExecutionContext sqlExecutionContext, CharSequence insertSql) throws SqlException {
+    public static void insert(SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext, CharSequence insertSql) throws SqlException {
         CompiledQuery compiledQuery = compiler.compile(insertSql, sqlExecutionContext);
         Assert.assertNotNull(compiledQuery.getInsertOperation());
         final InsertOperation insertOperation = compiledQuery.getInsertOperation();
@@ -1251,7 +1251,7 @@ public final class TestUtils {
     }
 
     public static void printSql(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             CharSequence sql,
             MutableCharSink sink
@@ -1264,7 +1264,7 @@ public final class TestUtils {
     }
 
     public static void printSqlWithTypes(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             CharSequence sql,
             MutableCharSink sink

@@ -24,8 +24,8 @@
 
 package io.questdb.test.griffin;
 
-import io.questdb.griffin.CompiledQuery;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.cairo.sql.CompiledQuery;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.test.AbstractGriffinTest;
 import io.questdb.test.CreateTableTestUtils;
@@ -45,7 +45,7 @@ import org.junit.Assert;
 
 public class AbstractSqlParserTest extends AbstractGriffinTest {
     private static void assertSyntaxError(
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             String query,
             int position,
             String contains,
@@ -118,7 +118,7 @@ public class AbstractSqlParserTest extends AbstractGriffinTest {
         }
     }
 
-    private void assertColumnNames(SqlCompiler compiler, String query, String... columns) throws SqlException {
+    private void assertColumnNames(SqlCompilerImpl compiler, String query, String... columns) throws SqlException {
         CompiledQuery cc = compiler.compile(query, sqlExecutionContext);
         try (RecordCursorFactory factory = cc.getRecordCursorFactory()) {
             RecordMetadata metadata = factory.getMetadata();

@@ -191,8 +191,6 @@ public class ServerMain implements Closeable {
                 config.getPGWireConfiguration(),
                 engine,
                 workerPoolManager,
-                ffCache,
-                snapshotAgent,
                 metrics
         ));
 

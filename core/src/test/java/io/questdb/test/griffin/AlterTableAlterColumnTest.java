@@ -36,7 +36,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.questdb.griffin.CompiledQuery.ALTER;
+import static io.questdb.cairo.sql.CompiledQuery.ALTER;
 
 public class AlterTableAlterColumnTest extends AbstractGriffinTest {
 

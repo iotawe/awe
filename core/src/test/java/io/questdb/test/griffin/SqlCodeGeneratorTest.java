@@ -29,7 +29,7 @@ import io.questdb.cairo.sql.Record;
 import io.questdb.cairo.sql.RecordCursor;
 import io.questdb.cairo.sql.RecordCursorFactory;
 import io.questdb.cairo.sql.RecordMetadata;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.griffin.engine.functions.test.TestMatchFunctionFactory;
@@ -50,7 +50,7 @@ import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.questdb.griffin.CompiledQuery.CREATE_TABLE;
+import static io.questdb.cairo.sql.CompiledQuery.CREATE_TABLE;
 
 public class SqlCodeGeneratorTest extends AbstractGriffinTest {
 
@@ -229,7 +229,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine)
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
             ) {
                 bindVariableService.clear();
                 bindVariableService.setLong(0, 10);
@@ -254,7 +254,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine)
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
             ) {
                 bindVariableService.clear();
                 bindVariableService.setLong("y", 10);
@@ -280,7 +280,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine)
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
             ) {
                 bindVariableService.clear();
                 bindVariableService.setLong(0, 10);
@@ -306,7 +306,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine)
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
             ) {
                 bindVariableService.clear();
                 bindVariableService.setLong(0, 10);
@@ -669,7 +669,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
 
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine);
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                     SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine)
             ) {
                 compiler.compile("create table y as (x), cast(col as symbol cache)", sqlExecutionContext);
@@ -3682,7 +3682,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             };
 
             try (CairoEngine engine = new CairoEngine(configuration);
-                 SqlCompiler compiler = new SqlCompiler(engine);
+                 SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                  SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine)
             ) {
                 try {
@@ -5460,7 +5460,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine)
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine)
             ) {
                 bindVariableService.clear();
                 bindVariableService.setLong("var", 10);
@@ -7918,7 +7918,7 @@ public class SqlCodeGeneratorTest extends AbstractGriffinTest {
             final CairoConfiguration configuration = new DefaultTestCairoConfiguration(root);
             try (
                     CairoEngine engine = new CairoEngine(configuration);
-                    SqlCompiler compiler = new SqlCompiler(engine);
+                    SqlCompilerImpl compiler = new SqlCompilerImpl(engine);
                     SqlExecutionContext sqlExecutionContext = TestUtils.createSqlExecutionCtx(engine, bindVariableService)
             ) {
                 compiler.compile("create table xy as (select rnd_str() v from long_sequence(100))", sqlExecutionContext);

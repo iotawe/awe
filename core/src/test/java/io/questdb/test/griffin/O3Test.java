@@ -28,7 +28,7 @@ import io.questdb.cairo.*;
 import io.questdb.cairo.sql.Record;
 import io.questdb.cairo.sql.RecordCursor;
 import io.questdb.cairo.sql.RecordCursorFactory;
-import io.questdb.griffin.SqlCompiler;
+import io.questdb.griffin.SqlCompilerImpl;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.SqlExecutionContext;
 import io.questdb.griffin.model.IntervalUtils;
@@ -839,7 +839,7 @@ public class O3Test extends AbstractO3Test {
         // when TableWriter is merges it with O3 data.
 
         Assume.assumeTrue(partitionO3SplitThreshold > 2000);
-        AtomicReference<SqlCompiler> compilerRef = new AtomicReference<>();
+        AtomicReference<SqlCompilerImpl> compilerRef = new AtomicReference<>();
         AtomicReference<SqlExecutionContext> executionContextRef = new AtomicReference<>();
         AtomicBoolean compared = new AtomicBoolean(false);
 
@@ -867,7 +867,7 @@ public class O3Test extends AbstractO3Test {
 
         executeWithPool(
                 0,
-                (CairoEngine engine, SqlCompiler compiler, SqlExecutionContext executionContext) -> {
+                (CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext executionContext) -> {
                     compilerRef.set(compiler);
                     executionContextRef.set(executionContext);
 
@@ -1016,7 +1016,7 @@ public class O3Test extends AbstractO3Test {
         ConcurrentLinkedQueue<Long> writeLen = new ConcurrentLinkedQueue<>();
         executeWithPool(0,
                 (CairoEngine engine,
-                 SqlCompiler compiler,
+                 SqlCompilerImpl compiler,
                  SqlExecutionContext sqlExecutionContext) -> {
                     String strColVal =
                             "2022-09-22T17:06:37.036305Z I i.q.c.O3CopyJob o3 copy [blockType=2, columnType=131080, dstFixFd=397, dstFixSize=1326000000, dstFixOffset=0, dstVarFd=0, dstVarSize=0, dstVarOffset=0, srcDataLo=0, srcDataHi=164458776, srcDataMax=165250000, srcOooLo=0, srcOooHi=0, srcOooMax=500000, srcOooPartitionLo=0, srcOooPartitionHi=499999, mixedIOFlag=true]";
@@ -1065,7 +1065,7 @@ public class O3Test extends AbstractO3Test {
         dataAppendPageSize = (int) Files.PAGE_SIZE;
         executeWithPool(0,
                 (CairoEngine engine,
-                 SqlCompiler compiler,
+                 SqlCompilerImpl compiler,
                  SqlExecutionContext sqlExecutionContext) -> {
                     int longsPerPage = dataAppendPageSize / 8;
                     int hi = (longsPerPage + 8) * 2;
@@ -1083,7 +1083,7 @@ public class O3Test extends AbstractO3Test {
         dataAppendPageSize = (int) Files.PAGE_SIZE;
         executeWithPool(0,
                 (CairoEngine engine,
-                 SqlCompiler compiler,
+                 SqlCompilerImpl compiler,
                  SqlExecutionContext sqlExecutionContext) -> {
                     int longsPerPage = dataAppendPageSize / 8;
                     int hi = (longsPerPage + 8) * 2;
@@ -1101,7 +1101,7 @@ public class O3Test extends AbstractO3Test {
         dataAppendPageSize = (int) Files.PAGE_SIZE;
         executeWithPool(0,
                 (CairoEngine engine,
-                 SqlCompiler compiler,
+                 SqlCompilerImpl compiler,
                  SqlExecutionContext sqlExecutionContext) -> {
                     int longsPerPage = dataAppendPageSize / 8;
                     int hi = (longsPerPage + 8) * 2;
@@ -1126,7 +1126,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void assertLag(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext,
             String createTableWith,
             String selectFrom,
@@ -1211,7 +1211,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testAppendIntoColdWriter0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -1767,7 +1767,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testAppendOrderStability(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -1842,7 +1842,7 @@ public class O3Test extends AbstractO3Test {
         }
     }
 
-    private static void testAppendToLastPartition(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    private static void testAppendToLastPartition(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         compiler.compile(
                 "create table x (" +
                         " a int," +
@@ -1884,7 +1884,7 @@ public class O3Test extends AbstractO3Test {
         }
     }
 
-    private static void testBench0(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
+    private static void testBench0(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext) throws SqlException {
         // create table with roughly 2AM data
         compiler.compile(
                 "create table x as (" +
@@ -1956,7 +1956,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastAppendBlankColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -2057,7 +2057,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastAppendColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -2192,7 +2192,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastDataMerge2Data0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
 
@@ -2388,7 +2388,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastDataMergeData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
 
@@ -2544,7 +2544,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastDataOOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
 
@@ -2699,7 +2699,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastOOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -2839,7 +2839,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopLastOOOPrefix0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -2983,7 +2983,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidAppendBlankColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -3088,7 +3088,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidAppendColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -3223,7 +3223,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidDataMergeData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
 
@@ -3364,7 +3364,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidMergeBlankColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         compiler.compile(
@@ -3468,7 +3468,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidMergeBlankColumnGeoHash0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         compiler.compile(
@@ -3526,7 +3526,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidOOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -3666,7 +3666,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMidOOODataUtf80(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -3813,7 +3813,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMoveUncommitted0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -3987,7 +3987,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopMoveUncommittedLastPart0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -4161,7 +4161,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testColumnTopNewPartitionMiddleOfTable0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         // 1970-01-06
@@ -4288,7 +4288,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testLagOverflowBySize0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         assertLag(
@@ -4303,7 +4303,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testLagOverflowMidCommit0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         assertLag(
@@ -4318,7 +4318,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testLargeO3MaxLag0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -4401,7 +4401,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testManyPartitionsParallel(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -4430,7 +4430,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testO3EdgeBug(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -4550,7 +4550,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testOOOTouchesNotLastPartition0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         long day = Timestamps.DAY_MICROS;
@@ -4629,7 +4629,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testOOOTouchesNotLastPartitionTop0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         long day = Timestamps.DAY_MICROS;
@@ -4710,7 +4710,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testOooFollowedByAnotherOOO0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -4822,7 +4822,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataAppendOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -4947,7 +4947,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataAppendOODataIndexed0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -5025,7 +5025,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataAppendOODataNotNullStrTail0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -5104,7 +5104,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataAppendOOPrependOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -5190,7 +5190,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataMergeData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -5273,7 +5273,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataMergeEnd0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -5351,7 +5351,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -5428,7 +5428,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataOODataPbOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -5528,7 +5528,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataOODataPbOODataDropColumn0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -5656,7 +5656,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataOOIntoLastIndexSearchBug0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -5776,7 +5776,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedDataOOIntoLastOverflowIntoNewPartition0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, URISyntaxException {
         compiler.compile(
@@ -5889,7 +5889,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -5999,7 +5999,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOODataOOCollapsed0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         // top edge of data timestamp equals of of
@@ -6082,7 +6082,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOODataUpdateMinTimestamp0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6190,7 +6190,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOMerge0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6301,7 +6301,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOMergeData0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6410,7 +6410,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOMergeOO0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6461,7 +6461,7 @@ public class O3Test extends AbstractO3Test {
         assertIndexConsistencySink(compiler, sqlExecutionContext);
     }
 
-    private static void testPartitionedOOONullSetters0(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext)
+    private static void testPartitionedOOONullSetters0(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext)
             throws SqlException, NumericException {
         compiler.compile("create table x (a int, b int, c int, ts timestamp) timestamp(ts) partition by DAY", sqlExecutionContext);
         try (TableWriter w = TestUtils.getWriter(engine, "x")) {
@@ -6499,7 +6499,7 @@ public class O3Test extends AbstractO3Test {
         TestUtils.assertEquals(expected, sink);
     }
 
-    private static void testPartitionedOOONullStrSetters0(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext)
+    private static void testPartitionedOOONullStrSetters0(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext)
             throws SqlException {
         final int commits = 4;
         final int rows = 1_000;
@@ -6538,7 +6538,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOPrefixesExistingPartitions0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6620,7 +6620,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testPartitionedOOTopAndBottom0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -6722,7 +6722,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testRebuildIndexLastPartitionWithColumnTop(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -6809,7 +6809,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testRebuildIndexWithColumnTopPrevPartition(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
 
@@ -6918,7 +6918,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testRepeatedIngest0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, NumericException {
 
@@ -7157,7 +7157,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testSendDuplicates(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         // create table with roughly 2AM data
@@ -7328,7 +7328,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testTwoTablesCompeteForBuffer0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext executionContext
     ) throws SqlException {
         compiler.compile(
@@ -7391,7 +7391,7 @@ public class O3Test extends AbstractO3Test {
         compiler.compile("create table z as (x union all y)", executionContext);
 
         // create another compiler to be used by second pool
-        try (SqlCompiler compiler2 = new SqlCompiler(engine)) {
+        try (SqlCompilerImpl compiler2 = new SqlCompilerImpl(engine)) {
 
             final CyclicBarrier barrier = new CyclicBarrier(2);
             final SOCountDownLatch haltLatch = new SOCountDownLatch(2);
@@ -7464,7 +7464,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testVanillaO3MaxLag0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         assertLag(
@@ -7479,7 +7479,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testVanillaO3MaxLagSinglePartition0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
         compiler.compile(
@@ -7559,7 +7559,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testWriterOpensCorrectTxnPartitionOnRestart0(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, NumericException {
         CairoConfiguration configuration = engine.getConfiguration();
@@ -7593,7 +7593,7 @@ public class O3Test extends AbstractO3Test {
 
     private static void testWriterOpensUnmappedPage(
             CairoEngine engine,
-            SqlCompiler compiler,
+            SqlCompilerImpl compiler,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException, NumericException {
         CairoConfiguration configuration = engine.getConfiguration();
@@ -7680,7 +7680,7 @@ public class O3Test extends AbstractO3Test {
         }
     }
 
-    private static void testXAndIndex(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext, String expected) throws SqlException {
+    private static void testXAndIndex(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext, String expected) throws SqlException {
         printSqlResult(compiler, sqlExecutionContext, "x");
         TestUtils.assertEquals(expected, sink);
         assertIndexConsistency(compiler, sqlExecutionContext, engine);
@@ -7809,7 +7809,7 @@ public class O3Test extends AbstractO3Test {
         }
     }
 
-    private void testVarColumnPageBoundaryIterationWithColumnTop(CairoEngine engine, SqlCompiler compiler, SqlExecutionContext sqlExecutionContext, int i, String o3Timestamp) throws SqlException {
+    private void testVarColumnPageBoundaryIterationWithColumnTop(CairoEngine engine, SqlCompilerImpl compiler, SqlExecutionContext sqlExecutionContext, int i, String o3Timestamp) throws SqlException {
         // Day 1 '1970-01-01'
         int initialCount = i / 2;
         compiler.compile(

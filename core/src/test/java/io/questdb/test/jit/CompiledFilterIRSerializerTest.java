@@ -33,7 +33,7 @@ import io.questdb.cairo.vm.Vm;
 import io.questdb.cairo.vm.api.MemoryCARW;
 import io.questdb.jit.CompiledFilterIRSerializer;
 import io.questdb.test.griffin.BaseFunctionFactoryTest;
-import io.questdb.griffin.CompiledQuery;
+import io.questdb.cairo.sql.CompiledQuery;
 import io.questdb.griffin.SqlException;
 import io.questdb.griffin.model.ExpressionNode;
 import io.questdb.std.MemoryTag;

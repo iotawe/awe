@@ -25,6 +25,7 @@
 package io.questdb.griffin;
 
 import io.questdb.cairo.CairoEngine;
+import io.questdb.cairo.sql.SqlCompiler;
 
 public interface SqlCompilerFactory {
     SqlCompiler getInstance(
