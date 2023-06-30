@@ -13,15 +13,28 @@ public class Utf8sTest {
         final DirectUtf8Sequence nullDirect = null;
         final DirectUtf8Sequence str1a = new GcUtf8String("test1");
         final DirectUtf8Sequence str1b = new GcUtf8String("test1");
+        final DirectUtf8Sequence str1c = new DirectUtf8Sequence() {
+            @Override
+            public long ptr() {
+                return str1a.ptr();
+            }
+
+            @Override
+            public int size() {
+                return str1a.size();
+            }
+        };
         final DirectUtf8Sequence str2 = new GcUtf8String("test2");
         final DirectUtf8Sequence str3 = new GcUtf8String("a_longer_string");
         Assert.assertNotEquals(str1a.ptr(), str1b.ptr());
+        Assert.assertEquals(str1a.ptr(), str1c.ptr());
 
         Assert.assertTrue(Utf8s.equals(nullDirect, nullDirect));
         Assert.assertFalse(Utf8s.equals(nullDirect, str1a));
         Assert.assertFalse(Utf8s.equals(str1a, null));
         Assert.assertTrue(Utf8s.equals(str1a, str1a));
         Assert.assertTrue(Utf8s.equals(str1a, str1b));
+        Assert.assertTrue(Utf8s.equals(str1a, str1c));
         Assert.assertFalse(Utf8s.equals(str1a, str2));
         Assert.assertFalse(Utf8s.equals(str2, str3));
 
